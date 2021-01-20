@@ -1,0 +1,222 @@
+---
+swagger: "2.0"
+info:
+  description: "API für das Consent Management"
+  version: "1.0.0"
+  title: "Consent Management API"
+  contact:
+    email: "borhahn@googlemail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "virtserver.swaggerhub.com"
+basePath: "/johait/consent/1.0.0"
+schemes:
+- "https"
+paths:
+  /consent:
+    get:
+      summary: "get all consents or for a presetted scenario"
+      description: "Get all consents or a preset for a given scenario"
+      operationId: "listConsents"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "preset"
+        in: "query"
+        description: "pass an optional key for a presettet collecting"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "search results matching criteria"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Consent"
+        "400":
+          description: "bad input parameter"
+      x-swagger-router-controller: "Default"
+  /consent/{consentId}:
+    get:
+      summary: "get a specific consent"
+      operationId: "getConsent"
+      parameters:
+      - name: "consentId"
+        in: "path"
+        description: "ID of consent to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "search results matching criteria"
+          schema: {}
+      x-swagger-router-controller: "Default"
+  /user/{userId}/consent:
+    get:
+      summary: "get all conents for a specific user"
+      description: "get all conents for a specific user"
+      operationId: "listUserConsents"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "ID of user  return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "alles gut"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/UserConsent"
+      x-swagger-router-controller: "Default"
+    post:
+      summary: "create a user consent"
+      description: "set a user consent"
+      operationId: "createUserConsent"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "ID of user  return"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "body"
+        name: "body"
+        description: "UserConsent object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/UserConsent"
+      responses:
+        "200":
+          description: "alles gut"
+      x-swagger-router-controller: "Default"
+  /users/{userId}/consents/{consentId}:
+    get:
+      summary: "get one conents for a specific user"
+      description: "get a specific consent for a specific user"
+      operationId: "getUserConsent"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "ID of user  return"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "consentId"
+        in: "path"
+        description: "ID of consent to  return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "alles gut"
+          schema: {}
+      x-swagger-router-controller: "Default"
+    put:
+      summary: "set a user consent"
+      description: "set a user consent"
+      operationId: "setUserConsent"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "ID of user  return"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "consentId"
+        in: "path"
+        description: "ID of consent to  return"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "body"
+        name: "body"
+        description: "UserConsent object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/UserConsent"
+      responses:
+        "200":
+          description: "alles gut"
+          schema: {}
+      x-swagger-router-controller: "Default"
+    delete:
+      summary: "set a user consent"
+      description: "set a user consent"
+      operationId: "removeUserConsent"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "ID of user  return"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "consentId"
+        in: "path"
+        description: "ID of consent to  return"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "body"
+        name: "body"
+        description: "UserConsent object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/UserConsent"
+      responses:
+        "200":
+          description: "alles gut"
+          schema: {}
+      x-swagger-router-controller: "Default"
+definitions:
+  Consent:
+    type: "object"
+    required:
+    - "description"
+    - "key"
+    - "name"
+    properties:
+      id:
+        type: "integer"
+      key:
+        type: "string"
+        example: "use_erezept"
+      name:
+        type: "string"
+        example: "Zustimmung eRezept"
+      description:
+        type: "string"
+        example: "Zustimmung zur Verwendung des eRezepts"
+    example:
+      name: "Zustimmung eRezept"
+      description: "Zustimmung zur Verwendung des eRezepts"
+      id: 0
+      key: "use_erezept"
+  UserConsent:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      consentId:
+        type: "integer"
+      value:
+        type: "integer"
+    example:
+      consentId: 6
+      id: 0
+      value: 1
